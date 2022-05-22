@@ -1,4 +1,3 @@
-// BINARY TREE
 
 #include<bits/stdc++.h>
 using namespace std;
@@ -38,7 +37,6 @@ void postorder(node* root){
 	cout<<root->d<<" ";
 }
 
-
 vector<vector<int>> bfs(node* root){
 		queue<node*> q;
 		vector<vector<int>> v;
@@ -62,6 +60,58 @@ vector<vector<int>> bfs(node* root){
 		return v;
 }
 
+vector<int> it_preorder(node* root){
+	stack<node*> s;
+	s.push(root);
+	vector<int> v;
+	while(!s.empty()){
+        node* tmp = s.top();
+		s.pop();
+		v.push_back(tmp->d);
+		if(tmp->r != NULL)
+		  s.push(tmp->r);
+		if(tmp->l != 0)
+		  s.push(tmp->l);
+	}
+	return v;
+}
+
+stack<node*> it_postorder(node* root){
+	stack<node* >s1,s2;
+	s1.push(root);
+	while(!s1.empty()){
+		s2.push(s1.top());
+		s1.pop();
+		if(s2.top()->l != 0)
+		  s1.push(s2.top()->l);
+		if(s2.top()->r != 0)
+		  s1.push(s2.top()->r);
+	}
+	return s2;
+
+}
+
+vector<int> it_inorder(node* root){
+	node* tmp = root;
+	vector<int> v;
+	stack<node*> s;
+	while(1){
+		if(tmp != 0){
+			s.push(tmp);
+			tmp = tmp->l;
+		}
+		else{
+			if(s.empty())
+				break;
+			tmp = s.top();
+			s.pop();
+            v.push_back(tmp->d);
+            tmp = tmp->r;
+		}
+	}
+	  
+	return v;
+}
 int main(){
 
     node *root = new node(1);
@@ -72,12 +122,27 @@ int main(){
     preorder(root);
     postorder(root);
     inorder(root);
-	vector<vector<int>> v;
+    vector<vector<int>> v;
     v = bfs(root);
     for(int i=0;i<v.size();i++){
     	for(auto x: v[i])
     		cout<<x<<" ";
     }
+    vector<int> v1;
+    v1 = it_preorder(root);
+    for(auto x:v1)
+    	cout<<x<<" ";
     
+    stack<node*> s;
+    s = it_postorder(root);
+    while(!s.empty()){
+    	cout<<s.top()->d<<" ";
+    	s.pop();
+    }
+
+    vector<int> v2 = it_inorder(root);
+    for(auto x:v2)
+    	cout<<x<<" ";
+
 	return 0;
 }
